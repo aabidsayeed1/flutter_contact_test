@@ -73,13 +73,19 @@ mixin class BaseController {
                 Get.back();
                 onDelete();
               },
-              child: const Text('Delete'),
+              child: Text(
+                'Delete',
+                style: TextStyle(color: AppColors.primary),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Get.back();
               },
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.primary),
+              ),
             ),
           ],
         );

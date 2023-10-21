@@ -3,6 +3,7 @@ import 'package:contact_test/presentation/widgets/add_space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../app/config/app_colors.dart';
 
 class AddContactWidget extends GetView<ContactsController> {
@@ -16,9 +17,21 @@ class AddContactWidget extends GetView<ContactsController> {
         children: [
           AddSpace.vertical(40.h),
           Center(
-            child: CircleAvatar(
-              radius: 70.r,
-              backgroundColor: AppColors.primary,
+            child: Hero(
+              tag: 'contact${controller.firstNameC!.text}',
+              child: CircleAvatar(
+                radius: 70.r,
+                backgroundColor: AppColors.primary,
+                child: Text(
+                  controller.selectedContactId.isEmpty
+                      ? ''
+                      : controller.firstNameC!.text[0].toString(),
+                  style: TextStyle(
+                      fontSize: 50.sp,
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ),
           SizedBox(
@@ -90,9 +103,22 @@ class AddContactWidget extends GetView<ContactsController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: TextField(
+              readOnly: true,
+              onTap: () {
+                _datePicker(context);
+              },
               controller: controller.dobC,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      _datePicker(context);
+                    },
+                    icon: Icon(
+                      Icons.date_range_outlined,
+                      color: AppColors.lightGray,
+                    ),
+                  ),
                   border: const OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.lightGray)),
@@ -100,9 +126,32 @@ class AddContactWidget extends GetView<ContactsController> {
               keyboardType: TextInputType.datetime,
             ),
           ),
-          const SizedBox(height: 16.0),
+          AddSpace.vertical(25.h),
         ],
       ),
     );
+  }
+
+  _datePicker(BuildContext context) async {
+    final DateTime? selectedDate = await Get.dialog(Theme(
+      data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: AppColors.primary,
+            onPrimary: AppColors.white,
+            onSurface: AppColors.lightblack,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.primary,
+            ),
+          )),
+      child: DatePickerDialog(
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1950),
+          lastDate: DateTime.now()),
+    ));
+    DateFormat dateFormat = DateFormat("dd/MM/yyyy");
+
+    controller.dobC!.text = dateFormat.format(selectedDate!);
   }
 }
