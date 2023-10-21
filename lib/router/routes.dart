@@ -1,3 +1,4 @@
+import 'package:contact_test/presentation/contacts/add_contacts_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +9,12 @@ appRoutes() => [
       GetPage(
         name: RoutePageString.contacts,
         page: () => const ConatactsPage(),
+        middlewares: [MyMiddelware()],
+        // transition: Transition.rightToLeft,
+      ),
+      GetPage(
+        name: RoutePageString.addContact,
+        page: () => const AddContactPage(),
         middlewares: [MyMiddelware()],
         // transition: Transition.rightToLeft,
       ),

@@ -1,6 +1,7 @@
 import 'package:contact_test/app/config/app_colors.dart';
 import 'package:contact_test/app/config/app_constants.dart';
 import 'package:contact_test/presentation/contacts/contacts_controller.dart';
+import 'package:contact_test/router/route_page_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,9 @@ class ConatactsPage extends GetView<ContactsController> {
           ),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(RoutePageString.addContact);
+                },
                 icon: Icon(
                   Icons.add,
                   size: 40.sp,
