@@ -2,14 +2,13 @@ import 'package:contact_test/app/services/local_data.dart';
 import 'package:contact_test/data/models/contacts_model.dart';
 
 import '../../domain/repositories/contacts_repository.dart';
-import '../provider/network/apis/contact_api.dart';
 
 class ContactsRespositoryImpl extends ContactsRepository {
   @override
-  Future<ContactModel> contacts(params) async {
-    final response = await ContactsAPI.contacts(params).request();
-    print(response);
-    return ContactModel.fromJson(response);
+  Future<ContactModel> addContacts(params) async {
+    await Future.delayed(const Duration(seconds: 2));
+    contactsData.insert(0, params);
+    return ContactModel.fromJson(contactsData[0]);
   }
 
   @override

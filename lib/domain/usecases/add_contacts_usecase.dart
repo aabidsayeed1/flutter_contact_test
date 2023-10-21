@@ -3,11 +3,11 @@ import 'package:contact_test/domain/repositories/contacts_repository.dart';
 
 import '../../app/core/usecases/param_usecase.dart';
 
-class ContactsUseCase extends ParamUseCase<ContactModel, dynamic> {
+class AddContactsUseCase extends ParamUseCase<ContactModel, dynamic> {
   final ContactsRepository _repo;
-  ContactsUseCase(this._repo);
+  AddContactsUseCase(this._repo);
   @override
   Future<ContactModel> execute(params) {
-    return _repo.contacts(params);
+    return _repo.addContacts(params);
   }
 }

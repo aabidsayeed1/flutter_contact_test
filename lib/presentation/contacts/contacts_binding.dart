@@ -3,13 +3,13 @@ import 'package:contact_test/domain/usecases/load_contacts_usecase.dart';
 import 'package:contact_test/presentation/contacts/contacts_controller.dart';
 import 'package:get/get.dart';
 
-import '../../domain/usecases/contacts_usecase.dart';
+import '../../domain/usecases/add_contacts_usecase.dart';
 
 class ContactsBindings extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => LoadContactsUseCase(Get.find<ContactsRespositoryImpl>()));
-    Get.lazyPut(() => ContactsUseCase(Get.find<ContactsRespositoryImpl>()));
+    Get.lazyPut(() => AddContactsUseCase(Get.find<ContactsRespositoryImpl>()));
     Get.lazyPut(() => ContactsController(Get.find(), Get.find()));
   }
 }
