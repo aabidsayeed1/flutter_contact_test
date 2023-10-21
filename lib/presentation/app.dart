@@ -3,7 +3,6 @@ import 'package:contact_test/presentation/contacts/contacts_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../router/routes.dart';
 import 'contacts/contacts_page.dart';
@@ -21,7 +20,7 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: AppColors.primary,
-          fontFamily: GoogleFonts.poppins().fontFamily,
+          // fontFamily: GoogleFonts.poppins().fontFamily,
         ),
         initialRoute: "/",
         getPages: appRoutes(),

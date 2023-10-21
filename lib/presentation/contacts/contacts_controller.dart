@@ -14,14 +14,17 @@ class ContactsController extends GetxController with BaseController {
   final AddContactsUseCase _addContactsUseCase;
   final LoadContactsUseCase _loadcontactsUseCase;
   RxList<ContactModel> contacts = <ContactModel>[].obs;
+  RxList<ContactModel> searchList = <ContactModel>[].obs;
+
   ContactsController(this._addContactsUseCase, this._loadcontactsUseCase);
   PageStateController pageStateController = PageStateController();
   TextEditingController? firstNameC;
   TextEditingController? lastNameC;
   TextEditingController? emailC;
   TextEditingController? dobC;
-  bool isFromAddContact = false;
+  TextEditingController? searchC;
   String selectedContactId = '';
+  var isSearch = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -30,6 +33,7 @@ class ContactsController extends GetxController with BaseController {
     lastNameC = TextEditingController();
     emailC = TextEditingController();
     dobC = TextEditingController();
+    searchC = TextEditingController();
   }
 
   void loadContactsData() async {
@@ -37,8 +41,8 @@ class ContactsController extends GetxController with BaseController {
       pageStateController.onStateUpdate(PageState.loading);
 
       await _loadcontactsUseCase.execute().then((value) {
-        print("weatherData ${value[0].email}");
         contacts.assignAll(value);
+        searchList.assignAll(value);
         pageStateController.onStateUpdate(PageState.loaded);
       });
     } catch (e) {
@@ -47,6 +51,9 @@ class ContactsController extends GetxController with BaseController {
   }
 
   void addOrUpdateContact() {
+    //Todo:
+    // add or update Contacts  through repository pending
+    // for now i'm adding direct into contactsData
     if (selectedContactId.isNotEmpty) {
       contacts.removeWhere((element) => element.id == selectedContactId);
       addContact();
@@ -56,11 +63,11 @@ class ContactsController extends GetxController with BaseController {
   }
 
   void editContact(int index) {
-    selectedContactId = contacts[index].id ?? '';
-    firstNameC!.text = contacts[index].firstName ?? '';
-    lastNameC!.text = contacts[index].lastName ?? '';
-    emailC!.text = contacts[index].email ?? '';
-    dobC!.text = contacts[index].dob ?? '';
+    selectedContactId = searchList[index].id ?? '';
+    firstNameC!.text = searchList[index].firstName ?? '';
+    lastNameC!.text = searchList[index].lastName ?? '';
+    emailC!.text = searchList[index].email ?? '';
+    dobC!.text = searchList[index].dob ?? '';
     Get.toNamed(RoutePageString.addContact);
   }
 
@@ -81,11 +88,7 @@ class ContactsController extends GetxController with BaseController {
           email: emailC?.text,
           dob: dobC?.text,
         ));
-
-//Todo:
-    // add Contact through repository pending
-    // for now i'm adding direct into contactsData
-
+    searchList.assignAll(contacts);
     contactsData.clear();
     for (var e in contacts) {
       contactsData.add({
@@ -98,6 +101,7 @@ class ContactsController extends GetxController with BaseController {
     }
     Get.back();
     clearAllTextFeild();
+    clearSearchData();
   }
 
   void clearAllTextFeild() {
@@ -106,5 +110,11 @@ class ContactsController extends GetxController with BaseController {
     lastNameC?.clear();
     emailC?.clear();
     dobC?.clear();
+  }
+
+  void clearSearchData() {
+    searchC?.clear();
+    isSearch(false);
+    searchList.assignAll(contacts);
   }
 }

@@ -18,7 +18,9 @@ class ConatactsPage extends GetView<ContactsController> {
         backgroundColor: AppColors.white,
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                controller.isSearch(true);
+              },
               icon: Icon(
                 Icons.search,
                 size: 40.sp,
@@ -26,13 +28,43 @@ class ConatactsPage extends GetView<ContactsController> {
               )),
           backgroundColor: AppColors.white,
           centerTitle: true,
-          title: Text(
-            AppStrings.contacts,
-            style: TextStyle(
-                fontSize: 24.sp,
-                color: AppColors.black,
-                fontWeight: FontWeight.w900),
-          ),
+          title: Obx(() => controller.isSearch.value
+              ? AnimatedContainer(
+                  height: 55.h,
+                  duration: const Duration(milliseconds: 1000),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                  child: TextField(
+                    controller: controller.searchC,
+                    textInputAction: TextInputAction.done,
+                    onChanged: (value) {
+                      controller.searchC?.text = value;
+                      controller.searchList.value = controller.contacts
+                          .where((element) => element.firstName!
+                              .toLowerCase()
+                              .contains(value.toLowerCase()))
+                          .toList();
+                    },
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            controller.clearSearchData();
+                          },
+                          icon: const Icon(Icons.close)),
+                      labelText: 'Search',
+                      border: const OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.lightGray)),
+                    ),
+                  ),
+                )
+              : Text(
+                  AppStrings.contacts,
+                  style: TextStyle(
+                      fontSize: 24.sp,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w900),
+                )),
           actions: [
             IconButton(
                 onPressed: () {
@@ -64,15 +96,14 @@ class ConatactsPage extends GetView<ContactsController> {
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0,
                 ),
-                itemCount: controller.contacts.length,
+                itemCount: controller.searchList.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      controller.isFromAddContact = false;
                       controller.editContact(index);
                     },
                     child: GridContactItem(
-                        name: controller.contacts[index].firstName!),
+                        name: controller.searchList[index].firstName!),
                   );
                 },
               ),
