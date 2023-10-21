@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:contact_test/app/services/local_data.dart';
 import 'package:contact_test/data/models/contacts_model.dart';
 import 'package:contact_test/domain/usecases/load_contacts_usecase.dart';
+import 'package:contact_test/router/route_page_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_state_handler/page_state_handler.dart';
@@ -19,7 +20,8 @@ class ContactsController extends GetxController with BaseController {
   TextEditingController? lastNameC;
   TextEditingController? emailC;
   TextEditingController? dobC;
-
+  bool isFromAddContact = false;
+  String selectedContactId = '';
   @override
   void onInit() {
     super.onInit();
@@ -44,6 +46,24 @@ class ContactsController extends GetxController with BaseController {
     }
   }
 
+  void addOrUpdateContact() {
+    if (selectedContactId.isNotEmpty) {
+      contacts.removeWhere((element) => element.id == selectedContactId);
+      addContact();
+    } else {
+      addContact();
+    }
+  }
+
+  void editContact(int index) {
+    selectedContactId = contacts[index].id ?? '';
+    firstNameC!.text = contacts[index].firstName ?? '';
+    lastNameC!.text = contacts[index].lastName ?? '';
+    emailC!.text = contacts[index].email ?? '';
+    dobC!.text = contacts[index].dob ?? '';
+    Get.toNamed(RoutePageString.addContact);
+  }
+
   void addContact() {
     if (firstNameC!.text.isEmpty ||
         lastNameC!.text.isEmpty ||
@@ -55,25 +75,33 @@ class ContactsController extends GetxController with BaseController {
     contacts.insert(
         0,
         ContactModel(
+          id: Random.secure().nextInt(100).toString(),
           firstName: firstNameC?.text,
           lastName: lastNameC?.text,
           email: emailC?.text,
           dob: dobC?.text,
         ));
+
 //Todo:
     // add Contact through repository pending
     // for now i'm adding direct into contactsData
-    contactsData.insert(
-      0,
-      {
-        "id": Random.secure().nextInt(100).toString(),
-        "firstName": firstNameC!.text.toString(),
-        "lastName": lastNameC!.text.toString(),
-        "email": emailC!.text.toString(),
-        "dob": dobC!.text.toString()
-      },
-    );
+
+    contactsData.clear();
+    for (var e in contacts) {
+      contactsData.add({
+        "id": e.id ?? '',
+        "firstName": e.firstName ?? '',
+        "lastName": e.lastName ?? '',
+        "email": e.email ?? '',
+        "dob": e.dob ?? '',
+      });
+    }
     Get.back();
+    clearAllTextFeild();
+  }
+
+  void clearAllTextFeild() {
+    selectedContactId = '';
     firstNameC?.clear();
     lastNameC?.clear();
     emailC?.clear();

@@ -36,6 +36,7 @@ class ConatactsPage extends GetView<ContactsController> {
           actions: [
             IconButton(
                 onPressed: () {
+                  controller.clearAllTextFeild();
                   Get.toNamed(RoutePageString.addContact);
                 },
                 icon: Icon(
@@ -65,8 +66,14 @@ class ConatactsPage extends GetView<ContactsController> {
                 ),
                 itemCount: controller.contacts.length,
                 itemBuilder: (context, index) {
-                  return GridContactItem(
-                      name: controller.contacts[index].firstName!);
+                  return GestureDetector(
+                    onTap: () {
+                      controller.isFromAddContact = false;
+                      controller.editContact(index);
+                    },
+                    child: GridContactItem(
+                        name: controller.contacts[index].firstName!),
+                  );
                 },
               ),
             )));

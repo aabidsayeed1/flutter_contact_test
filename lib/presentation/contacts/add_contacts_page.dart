@@ -16,6 +16,7 @@ class AddContactPage extends GetView<ContactsController> {
           leadingWidth: 100.w,
           leading: TextButton(
             onPressed: () {
+              controller.clearAllTextFeild();
               Get.back();
             },
             child: Text(
@@ -30,7 +31,7 @@ class AddContactPage extends GetView<ContactsController> {
           actions: [
             TextButton(
               onPressed: () {
-                controller.addContact();
+                controller.addOrUpdateContact();
               },
               child: Text(
                 'Save',
