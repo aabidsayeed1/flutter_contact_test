@@ -1,16 +1,14 @@
 # contact_test
 
-A new Flutter project.
+For Interview Contacts Management Test.
 
 ## Getting Started
+- Load Contacts
+- Add Contact
+- Update Contacts
+- Pull To Refresh Contact
+- Search Contact
+- Delete Multiple Contacts
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Demo
+![Screen Recording 2023-10-22 at 2 21 08 AM](https://github.com/aabidsayeed1/flutter_contact_test/assets/37657822/378a5ac7-ef28-4585-a581-b10306d05c70)
