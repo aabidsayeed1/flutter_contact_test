@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:page_state_handler/page_state_handler.dart';
-
 import 'widget/grid_contact_item.dart';
 
 class ConatactsPage extends GetView<ContactsController> {
@@ -29,9 +28,8 @@ class ConatactsPage extends GetView<ContactsController> {
           backgroundColor: AppColors.white,
           centerTitle: true,
           title: Obx(() => controller.isSearch.value
-              ? AnimatedContainer(
+              ? Container(
                   height: 55.h,
-                  duration: const Duration(milliseconds: 1000),
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
                   child: TextField(
@@ -66,16 +64,30 @@ class ConatactsPage extends GetView<ContactsController> {
                       fontWeight: FontWeight.w900),
                 )),
           actions: [
-            IconButton(
-                onPressed: () {
-                  controller.clearAllTextFeild();
-                  Get.toNamed(RoutePageString.addContact);
-                },
-                icon: Icon(
-                  Icons.add,
-                  size: 40.sp,
-                  color: AppColors.primary,
-                )),
+            Obx(
+              () => controller.deleteIdList.isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        controller.showConfirmationDialog(() {
+                          controller.delete();
+                        });
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        size: 35.sp,
+                        color: AppColors.primary,
+                      ))
+                  : IconButton(
+                      onPressed: () {
+                        controller.clearAllTextFeild();
+                        Get.toNamed(RoutePageString.addContact);
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        size: 40.sp,
+                        color: AppColors.primary,
+                      )),
+            ),
           ],
         ),
         body: PageStateHandler(
@@ -99,11 +111,32 @@ class ConatactsPage extends GetView<ContactsController> {
                 itemCount: controller.searchList.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.editContact(index);
+                    onLongPress: () {
+                      controller.deleteIdList
+                          .add(controller.searchList[index].id!);
                     },
-                    child: GridContactItem(
-                        name: controller.searchList[index].firstName!),
+                    onTap: () {
+                      if (controller.deleteIdList.isNotEmpty) {
+                        if (controller.deleteIdList
+                            .contains(controller.searchList[index].id!)) {
+                          controller.deleteIdList.removeWhere((element) =>
+                              element == controller.searchList[index].id!);
+                        } else {
+                          controller.deleteIdList
+                              .add(controller.searchList[index].id!);
+                        }
+                      } else {
+                        controller.editContact(index);
+                      }
+                    },
+                    child: Obx(
+                      () => GridContactItem(
+                          boderColor: controller.deleteIdList
+                                  .contains(controller.searchList[index].id!)
+                              ? AppColors.primary
+                              : AppColors.lightGray,
+                          name: controller.searchList[index].firstName!),
+                    ),
                   );
                 },
               ),

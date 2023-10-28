@@ -16,6 +16,8 @@ class ContactsController extends GetxController with BaseController {
   RxList<ContactModel> contacts = <ContactModel>[].obs;
   RxList<ContactModel> searchList = <ContactModel>[].obs;
 
+  RxList<String> deleteIdList = <String>[].obs;
+
   ContactsController(this._addContactsUseCase, this._loadcontactsUseCase);
   PageStateController pageStateController = PageStateController();
   TextEditingController? firstNameC;
@@ -39,7 +41,7 @@ class ContactsController extends GetxController with BaseController {
   void loadContactsData() async {
     try {
       pageStateController.onStateUpdate(PageState.loading);
-
+      deleteIdList.clear();
       await _loadcontactsUseCase.execute().then((value) {
         contacts.assignAll(value);
         searchList.assignAll(value);
@@ -60,6 +62,14 @@ class ContactsController extends GetxController with BaseController {
     } else {
       addContact();
     }
+  }
+
+  void delete() {
+    for (String id in deleteIdList) {
+      contacts.removeWhere((element) => element.id == id);
+    }
+    deleteIdList.clear();
+    saveInDB();
   }
 
   void editContact(int index) {
@@ -88,7 +98,13 @@ class ContactsController extends GetxController with BaseController {
           email: emailC?.text,
           dob: dobC?.text,
         ));
-    searchList.assignAll(contacts);
+    saveInDB();
+    Get.back();
+    clearAllTextFeild();
+  }
+
+  void saveInDB() {
+    clearSearchData();
     contactsData.clear();
     for (var e in contacts) {
       contactsData.add({
@@ -99,9 +115,6 @@ class ContactsController extends GetxController with BaseController {
         "dob": e.dob ?? '',
       });
     }
-    Get.back();
-    clearAllTextFeild();
-    clearSearchData();
   }
 
   void clearAllTextFeild() {

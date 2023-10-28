@@ -6,9 +6,10 @@ For Interview Contacts Management Test.
 - Load Contacts
 - Add Contact
 - Update Contacts
-- Refresh Contact
+- Pull To Refresh Contact
 - Search Contact
+- Delete Multiple Contacts
 
 ## Demo
+![Screen Recording 2023-10-22 at 2 21 08 AM](https://github.com/aabidsayeed1/flutter_contact_test/assets/37657822/378a5ac7-ef28-4585-a581-b10306d05c70)
 
-![Screen Recording 2023-10-21 at 6 12 09 PM](https://github.com/aabidsayeed1/flutter_contact_test/assets/37657822/751c86c2-9034-49ab-8374-4cf81c6f2e13)
